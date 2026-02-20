@@ -1,0 +1,13 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowInvokeGateway",
+            "Effect": "Allow",
+            "Action": [
+                "bedrock-agentcore:InvokeGateway"
+            ],
+            "Resource": "arn:aws:bedrock-agentcore:${aws_region}:${aws_account_id}:gateway/*"
+        }
+    ]
+}

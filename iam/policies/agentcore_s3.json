@@ -1,0 +1,22 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowS3GetCodeArtifacts",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": "${agent_code_bucket_arn}/*"
+        },
+        {
+            "Sid": "AllowS3ListCodeBucket",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": "${agent_code_bucket_arn}"
+        }
+    ]
+}

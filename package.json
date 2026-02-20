@@ -1,0 +1,23 @@
+{
+  "name": "bedrock-agentcore-learning",
+  "version": "0.0.1",
+  "description": "Amazon Bedrock AgentCore learning repo with examples and docs for building AI agents on AWS",
+  "homepage": "https://github.com/your-org/bedrock-agentcore-learning",
+  "bugs": {
+    "url": "https://github.com/your-org/bedrock-agentcore-learning/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/bedrock-agentcore-learning.git"
+  },
+  "license": "Apache-2.0",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "dependencies": {
+    "conventional-changelog": "^7.1.1"
+  },
+  "scripts": {
+    "version": "conventional-changelog && git add CHANGELOG.md"
+  }
+}
