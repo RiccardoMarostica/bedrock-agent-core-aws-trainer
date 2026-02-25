@@ -224,3 +224,4 @@ infrastructure/environments/**/.env
 .claude
 plans
 CLAUDE.md
+.kiro
