@@ -54,49 +54,6 @@ output "agentcore_endpoint_arn" {
   value       = var.create_runtime ? module.agentcore_runtime[0].endpoint_arn : null
 }
 
-# ################################################################################
-# # AgentCore Gateway (only when create_gateway = true)
-# ################################################################################
-
-# output "agentcore_gateway_id" {
-#   description = "ID of the AgentCore Gateway."
-#   value       = var.create_gateway ? module.agentcore_gateway[0].gateway_id : null
-# }
-
-# output "agentcore_gateway_arn" {
-#   description = "ARN of the AgentCore Gateway."
-#   value       = var.create_gateway ? module.agentcore_gateway[0].gateway_arn : null
-# }
-
-# output "agentcore_gateway_url" {
-#   description = "URL endpoint of the AgentCore Gateway."
-#   value       = var.create_gateway ? module.agentcore_gateway[0].gateway_url : null
-# }
-
-# ################################################################################
-# # AWS Docs MCP Server Runtime (only when create_aws_docs_mcp_runtime = true)
-# ################################################################################
-
-# output "aws_docs_mcp_ecr_repository_url" {
-#   description = "URL of the ECR repository for the AWS Docs MCP Server."
-#   value       = var.create_aws_docs_mcp_runtime ? module.aws_docs_mcp_ecr.repository_url : null
-# }
-
-# output "aws_docs_mcp_runtime_id" {
-#   description = "ID of the AWS Docs MCP Server AgentCore Runtime."
-#   value       = var.create_aws_docs_mcp_runtime ? module.aws_docs_mcp_runtime[0].agent_runtime_id : null
-# }
-
-# output "aws_docs_mcp_runtime_arn" {
-#   description = "ARN of the AWS Docs MCP Server AgentCore Runtime."
-#   value       = var.create_aws_docs_mcp_runtime ? module.aws_docs_mcp_runtime[0].agent_runtime_arn : null
-# }
-
-# output "aws_docs_mcp_endpoint_arn" {
-#   description = "ARN of the AWS Docs MCP Server runtime endpoint."
-#   value       = var.create_aws_docs_mcp_runtime ? module.aws_docs_mcp_runtime[0].endpoint_arn : null
-# }
-
 ################################################################################
 # AgentCore Memory (only when create_memory = true)
 ################################################################################

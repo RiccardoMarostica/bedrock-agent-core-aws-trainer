@@ -21,7 +21,7 @@ def _client():
     return boto3.client("bedrock-agentcore", region_name=AWS_REGION)
 
 
-def retrieve(query: str, session_id: str) -> str:
+def retrieve(query: str) -> str:
     """Return a formatted memory context block for the given query.
 
     Returns an empty string when memory is disabled or on any error.
