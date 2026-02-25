@@ -7,7 +7,7 @@ Handles the session-binding step of the 3-legged OAuth2 flow:
   3. Shows a success page so the user knows they can retry
 
 Usage:
-    python test/oauth2_callback_server.py --region eu-west-1 --user-id test-user-1
+    python test/oauth2_callback_server.py --region eu-west-1 --user-id <USER_ID>
 
 Then use the printed callback URL when updating your workload identity's
 AllowedResourceOauth2ReturnUrls.
@@ -18,13 +18,10 @@ import logging
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs, unquote
 
-import boto3
+from config import add_aws_args, boto_session, OAUTH2_CALLBACK_PORT, OAUTH2_CALLBACK_PATH
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
-
-PORT = 9090
-CALLBACK_PATH = "/oauth2/callback"
 
 # Set by CLI args
 _client = None
@@ -39,7 +36,7 @@ class CallbackHandler(BaseHTTPRequestHandler):
             self._respond(200, "ok")
             return
 
-        if parsed.path != CALLBACK_PATH:
+        if parsed.path != OAUTH2_CALLBACK_PATH:
             self._respond(404, "Not found")
             return
 
@@ -91,17 +88,16 @@ def main():
     global _client, _user_id
 
     parser = argparse.ArgumentParser(description="Local OAuth2 callback server")
-    parser.add_argument("--region", default="eu-west-1")
-    parser.add_argument("--profile", default="default")
-    parser.add_argument("--port", type=int, default=PORT)
+    add_aws_args(parser)
+    parser.add_argument("--port", type=int, default=OAUTH2_CALLBACK_PORT)
     parser.add_argument("--user-id", required=True, help="Same user ID passed to invoke.py --user-id")
     args = parser.parse_args()
 
     _user_id = args.user_id
-    session = boto3.Session(profile_name=args.profile, region_name=args.region)
+    session = boto_session(args)
     _client = session.client("bedrock-agentcore")
 
-    callback_url = f"http://localhost:{args.port}{CALLBACK_PATH}"
+    callback_url = f"http://localhost:{args.port}{OAUTH2_CALLBACK_PATH}"
     print(f"\nCallback URL: {callback_url}")
     print(f"User ID:      {_user_id}")
     print(f"Listening on port {args.port}...\n")

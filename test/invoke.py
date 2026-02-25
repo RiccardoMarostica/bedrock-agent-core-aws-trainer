@@ -13,7 +13,7 @@ import argparse
 import json
 import uuid
 
-import boto3
+from config import add_aws_args, boto_session
 
 
 def invoke(
@@ -25,7 +25,7 @@ def invoke(
     profile: str | None,
     user_id: str | None = None,
 ) -> None:
-    session = boto3.Session(profile_name=profile, region_name=region)
+    session = boto_session(argparse.Namespace(profile=profile, region=region))
     client = session.client("bedrock-agentcore")
 
     payload = json.dumps({"prompt": prompt}).encode()
@@ -53,20 +53,18 @@ def invoke(
         raw = b"".join(response.get("response", []))
         print(json.dumps(json.loads(raw.decode("utf-8")), indent=2, ensure_ascii=False))
     else:
-        # Fallback: read raw response body
         raw = b"".join(response.get("response", []))
         print(raw.decode("utf-8"))
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Invoke an AgentCore Runtime endpoint")
+    add_aws_args(parser)
     parser.add_argument("--runtime-arn", required=True, help="AgentCore Runtime ARN")
     parser.add_argument("--endpoint-name", required=False, default="DEFAULT", help="AgentCore Runtime endpoint name (default: DEFAULT)")
     parser.add_argument("--prompt", required=True, help="Prompt to send to the agent")
     parser.add_argument("--session-id", default=None, help="Session ID (default: random UUID)")
     parser.add_argument("--user-id", default=None, help="Runtime user ID for identity/OAuth2 flows")
-    parser.add_argument("--region", default="eu-west-1", help="AWS region (default: eu-west-1)")
-    parser.add_argument("--profile", default="default", help="AWS CLI profile (default: default)")
     args = parser.parse_args()
 
     session_id = args.session_id or str(uuid.uuid4())

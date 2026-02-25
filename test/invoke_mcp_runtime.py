@@ -22,12 +22,13 @@ import asyncio
 import json
 from collections.abc import Generator
 
-import boto3
 import httpx
 from botocore.auth import SigV4Auth as BotocoreSigV4Auth
 from botocore.awsrequest import AWSRequest
 from mcp import ClientSession
 from mcp.client.streamable_http import streamablehttp_client
+
+from config import add_aws_args, boto_session
 
 
 class SigV4HttpxAuth(httpx.Auth):
@@ -59,8 +60,8 @@ async def run(runtime_arn: str, region: str, profile: str | None, tool: str | No
     url = build_url(runtime_arn, region)
     print(f"URL: {url}\n")
 
-    boto_session = boto3.Session(profile_name=profile, region_name=region)
-    credentials = boto_session.get_credentials().get_frozen_credentials()
+    session = boto_session(argparse.Namespace(profile=profile, region=region))
+    credentials = session.get_credentials().get_frozen_credentials()
     auth = SigV4HttpxAuth(credentials, "bedrock-agentcore", region)
 
     async with streamablehttp_client(url, auth=auth, terminate_on_close=False) as (read, write, _):
@@ -85,11 +86,10 @@ async def run(runtime_arn: str, region: str, profile: str | None, tool: str | No
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Invoke an AgentCore MCP Runtime")
+    add_aws_args(parser)
     parser.add_argument("--runtime-arn", required=True)
     parser.add_argument("--tool", default=None)
     parser.add_argument("--args", default="{}", help="Tool arguments as JSON string")
-    parser.add_argument("--region", default="eu-west-1")
-    parser.add_argument("--profile", default="default")
     args = parser.parse_args()
 
     asyncio.run(run(

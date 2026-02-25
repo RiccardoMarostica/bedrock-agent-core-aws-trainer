@@ -121,7 +121,7 @@ def invoke(payload: dict) -> dict:
     session_id = payload.get("session_id", f"session-{date.today().isoformat()}")
 
     """Retrieve from the memory the context to have memory of the conversation"""
-    memory_context = memory.retrieve(user_message)
+    memory_context = memory.retrieve(user_message, session_id)
     augmented_message = f"{memory_context}{user_message}" if memory_context else user_message
 
     """Init Strand Agent and invoke it"""

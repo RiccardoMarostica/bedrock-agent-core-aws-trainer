@@ -6,26 +6,25 @@ Usage:
     python test/update_workload_identity.py
 
     # Update a specific workload identity with the callback URL:
-    python test/update_workload_identity.py \
-        --name workload-3b13b595 \
+    python test/update_workload_identity.py \\
+        --name <WORKLOAD_IDENTITY_NAME> \\
         --add-url "http://localhost:9090/oauth2/callback"
 """
 
 import argparse
 import json
 
-import boto3
+from config import add_aws_args, boto_session
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--profile", default="default")
-    parser.add_argument("--region", default="eu-west-1")
+    add_aws_args(parser)
     parser.add_argument("--name", help="Workload identity name to update")
     parser.add_argument("--add-url", help="OAuth2 return URL to add")
     args = parser.parse_args()
 
-    session = boto3.Session(profile_name=args.profile, region_name=args.region)
+    session = boto_session(args)
     client = session.client("bedrock-agentcore-control")
 
     if not args.name:
